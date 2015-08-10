@@ -20,35 +20,20 @@ namespace FTP_Upload
 
         public void Send(XmlDocument document, string fileName)
         {
-            try
+            var fullPath = BuildFullPath(fileName);
+
+            ValidateFileName(fileName, fullPath);
+
+            var request = (FtpWebRequest)WebRequest.Create(fullPath);
+
+            request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.UsePassive = false;
+            request.Credentials = _credentials;
+
+            using (var stream = request.GetRequestStream())
             {
-
-
-                var fullPath = BuildFullPath(fileName);
-
-                ValidateFileName(fileName, fullPath);
-
-                var request = (FtpWebRequest)WebRequest.Create(fullPath);
-
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.UsePassive = false;
-                request.Credentials = _credentials;
-
-                using (var stream = request.GetRequestStream())
-                {
-                    document.Save(stream);
-                }
-
-                MessageBox.Show("File successfully uploaded to server");
+                document.Save(stream);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-
-                throw;
-            }
-
-
         }
 
         private void ValidateFileName(string fileName, string fullPath)

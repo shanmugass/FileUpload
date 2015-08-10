@@ -29,18 +29,29 @@ namespace FTP_Upload
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var server = ConfigurationManager.AppSettings["Domain"];
-            var folder = ConfigurationManager.AppSettings["FolderPath"];
-            var userName = ConfigurationManager.AppSettings["UserName"];
-            var password = ConfigurationManager.AppSettings["Password"];            
+            try
+            {
 
-            var client = new FtpClient(server, folder, userName, password);
+                var server = ConfigurationManager.AppSettings["Domain"];
+                var folder = ConfigurationManager.AppSettings["FolderPath"];
+                var userName = ConfigurationManager.AppSettings["UserName"];
+                var password = ConfigurationManager.AppSettings["Password"];
 
-            var xmlDocument = new XmlDocument();
+                var client = new FtpClient(server, folder, userName, password);
 
-            xmlDocument.Load("test.xml");
+                var xmlDocument = new XmlDocument();
 
-            client.Send(xmlDocument, DateTime.Now.ToString("yyyyMMddhhmmsss") + ".xml");
+                xmlDocument.Load("test.xml");
+
+                client.Send(xmlDocument, DateTime.Now.ToString("yyyyMMddhhmmsss") + ".xml");
+                MessageBox.Show("File successfully uploaded to server");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+
+                throw;
+            }
 
         }
     }
