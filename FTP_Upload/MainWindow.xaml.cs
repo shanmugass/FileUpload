@@ -29,7 +29,7 @@ namespace FTP_Upload
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var server = ConfigurationManager.AppSettings["Server"];
+            var server = ConfigurationManager.AppSettings["Domain"];
             var folder = ConfigurationManager.AppSettings["FolderPath"];
             var userName = ConfigurationManager.AppSettings["UserName"];
             var password = ConfigurationManager.AppSettings["Password"];            
