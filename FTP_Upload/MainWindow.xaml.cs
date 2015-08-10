@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,12 @@ namespace FTP_Upload
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var client = new FtpClient("SERVERNAME", "PATH", "USERNAME", "PASSWORD");
+            var server = ConfigurationManager.AppSettings["Server"];
+            var folder = ConfigurationManager.AppSettings["FolderPath"];
+            var userName = ConfigurationManager.AppSettings["UserName"];
+            var password = ConfigurationManager.AppSettings["Password"];            
+
+            var client = new FtpClient(server, folder, userName, password);
 
             var xmlDocument = new XmlDocument();
 
