@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
 
 namespace FTP_Upload
@@ -31,11 +21,10 @@ namespace FTP_Upload
         {
             try
             {
-
-                var server = ConfigurationManager.AppSettings["Domain"];
-                var folder = ConfigurationManager.AppSettings["FolderPath"];
-                var userName = ConfigurationManager.AppSettings["UserName"];
-                var password = ConfigurationManager.AppSettings["Password"];
+                string server = ConfigurationManager.AppSettings["Domain"];
+                string folder = ConfigurationManager.AppSettings["FolderPath"];
+                string userName = ConfigurationManager.AppSettings["UserName"];
+                string password = ConfigurationManager.AppSettings["Password"];
 
                 var client = new FtpClient(server, folder, userName, password);
 
@@ -49,10 +38,45 @@ namespace FTP_Upload
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-
-                throw;
             }
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var client = new WebClient();
+                Stream data = client.OpenRead(ConfigurationManager.AppSettings["UrlToRead"]);
+                var reader = new StreamReader(data);
+                string s = reader.ReadToEnd();
+                MessageBox.Show(s);
+                data.Close();
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string server = ConfigurationManager.AppSettings["Domain"];
+                string folder = ConfigurationManager.AppSettings["FolderPath"];
+                string userName = ConfigurationManager.AppSettings["UserName"];
+                string password = ConfigurationManager.AppSettings["Password"];
+
+                var client = new FtpClient(server, folder, userName, password);
+
+                client.SendUsingWebClient("test.xml", DateTime.Now.ToString("yyyyMMddhhmmsss") + ".xml");
+                MessageBox.Show("File successfully uploaded to server");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
         }
     }
 }
